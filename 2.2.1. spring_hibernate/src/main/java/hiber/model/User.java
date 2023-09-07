@@ -1,10 +1,15 @@
 package hiber.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+   @OneToOne(mappedBy = "user")
+   @Cascade(org.hibernate.annotations.CascadeType.ALL)
+   private Car car;
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +25,31 @@ public class User {
    private String email;
 
    public User() {}
-   
+
    public User(String firstName, String lastName, String email) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
    }
 
+   public Car getCar() {
+      return this.car;
+   }
+
+   @Override
+   public String toString() {
+      return "User{" +
+              "car=" + car.getModel() + " " + car.getSeries() +
+              ", firstName='" + firstName + '\'' +
+              ", lastName='" + lastName + '\'' +
+              ", email='" + email + '\'' +
+              '}';
+   }
+
+   public void setCar(Car car) {
+      this.car = car;
+      car.setUser(this);
+   }
    public Long getId() {
       return id;
    }
